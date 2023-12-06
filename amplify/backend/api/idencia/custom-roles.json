@@ -1,0 +1,7 @@
+{
+    "adminRoleNames": [
+        "arn:aws:iam::243790920958:user/avaniYork",
+        "arn:aws:iam::243790920958:user/vishal",
+        "arn:aws:iam::243790920958:user/digvijay_york"
+    ]
+}

@@ -1,0 +1,39 @@
+{
+  "devtest": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-idencia-devtest-125321-authRole",
+      "UnauthRoleArn": "arn:aws:iam::243790920958:role/amplify-idencia-devtest-125321-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::243790920958:role/amplify-idencia-devtest-125321-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-idencia-devtest-125321-deployment",
+      "UnauthRoleName": "amplify-idencia-devtest-125321-unauthRole",
+      "StackName": "amplify-idencia-devtest-125321",
+      "StackId": "arn:aws:cloudformation:us-east-2:243790920958:stack/amplify-idencia-devtest-125321/58e0f0d0-9408-11ee-8cad-060215103905",
+      "AmplifyAppId": "d13p7wavfkhyie",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-idencia-devtest-125321-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "idencia047c937e": {}
+      },
+      "function": {
+        "idencia047c937ePostConfirmation": {
+          "deploymentBucketName": "amplify-idencia-devtest-125321-deployment",
+          "s3Key": "amplify-builds/idencia047c937ePostConfirmation-6a557770346462766849-build.zip"
+        },
+        "idencia047c937ePreSignup": {
+          "deploymentBucketName": "amplify-idencia-devtest-125321-deployment",
+          "s3Key": "amplify-builds/idencia047c937ePreSignup-48614f75544742447274-build.zip"
+        },
+        "idencia047c937ePreTokenGeneration": {
+          "deploymentBucketName": "amplify-idencia-devtest-125321-deployment",
+          "s3Key": "amplify-builds/idencia047c937ePreTokenGeneration-36346a3833574447624d-build.zip"
+        },
+        "idenciaappSyncHelper": {
+          "deploymentBucketName": "amplify-idencia-devtest-125321-deployment",
+          "s3Key": "amplify-builds/idenciaappSyncHelper-LambdaLayerVersion50b20074-build.zip"
+        }
+      }
+    }
+  }
+}
