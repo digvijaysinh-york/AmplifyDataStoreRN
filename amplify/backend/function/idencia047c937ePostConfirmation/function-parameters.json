@@ -1,0 +1,32 @@
+{
+  "trigger": true,
+  "modules": [
+    "custom"
+  ],
+  "parentResource": "idencia047c937e",
+  "functionName": "idencia047c937ePostConfirmation",
+  "resourceName": "idencia047c937ePostConfirmation",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "/snapshot/amplify-cli/build/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/PostConfirmation",
+  "triggerTemplate": "PostConfirmation.json.ejs",
+  "triggerEventPath": "PostConfirmation.event.json",
+  "roleName": "idencia047c937ePostConfirmation",
+  "skipEdit": true,
+  "permissions": {
+    "api": {
+      "idencia": [
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "idenciaappSyncHelper",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true,
+      "env": "devtest"
+    }
+  ]
+}
