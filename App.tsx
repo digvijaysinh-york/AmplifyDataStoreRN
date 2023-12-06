@@ -22,7 +22,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { DataStore } from 'aws-amplify/datastore';  
-import { Todo } from './src/models';
+
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -31,26 +31,26 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
   
-  const saveToDB = async () => {
-    try {
-      const todoRes = await DataStore.save(
-        new Todo({
-          name:'Test todo'
-        })
-      );
-      console.log('TodoRes retrieved successfully!', JSON.stringify(todoRes, null, 2));
-    } catch (error) {
-      console.log('Error retrieving todoRes', error);
-    }
-  }
-  const getData = async () => {
-    try {
-      const todoRes = await DataStore.query(Todo);
-      console.log('Todo retrieved successfully!', JSON.stringify(todoRes, null, 2));
-    } catch (error) {
-      console.log('Error retrieving posts', error);
-    }
-  }
+  // const saveToDB = async () => {
+  //   try {
+  //     const todoRes = await DataStore.save(
+  //       new Todo({
+  //         name:'Test todo'
+  //       })
+  //     );
+  //     console.log('TodoRes retrieved successfully!', JSON.stringify(todoRes, null, 2));
+  //   } catch (error) {
+  //     console.log('Error retrieving todoRes', error);
+  //   }
+  // }
+  // const getData = async () => {
+  //   try {
+  //     const todoRes = await DataStore.query(Todo);
+  //     console.log('Todo retrieved successfully!', JSON.stringify(todoRes, null, 2));
+  //   } catch (error) {
+  //     console.log('Error retrieving posts', error);
+  //   }
+  // }
   
   
   return (
@@ -60,8 +60,9 @@ function App(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <View style={{gap:20,padding:20}}>
-      <Pressable onPress={saveToDB}><Text>SAVE</Text></Pressable>
-      <Pressable onPress={getData}><Text>GET</Text></Pressable>
+        <Text>Hii</Text>
+      {/* <Pressable onPress={saveToDB}><Text>SAVE</Text></Pressable>
+      <Pressable onPress={getData}><Text>GET</Text></Pressable> */}
       </View>
     </SafeAreaView>
   );
