@@ -33,6 +33,9 @@
           "deploymentBucketName": "amplify-idencia-devtest-125321-deployment",
           "s3Key": "amplify-builds/idenciaappSyncHelper-LambdaLayerVersion50b20074-build.zip"
         }
+      },
+      "api": {
+        "idencia": {}
       }
     }
   }

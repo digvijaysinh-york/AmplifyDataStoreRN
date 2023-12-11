@@ -8,6 +8,7 @@
 import type { PropsWithChildren } from 'react';
 import React, { useEffect, useState } from 'react';
 import {
+  Platform,
   Pressable,
   SafeAreaView,
   StatusBar,
@@ -76,13 +77,18 @@ function App(): JSX.Element {
     try {
       const todoRes = await DataStore.save(
         new Todo({
-          name:'Digu todo'
+          name:todo+Platform.OS,
         })
-      );
-      console.log('TodoRes retrieved successfully!', JSON.stringify(todoRes, null, 2));
+      ).then(()=>{
+        console.log('Saved  rrrrr!', JSON.stringify(todo, null, 2));  
+        settodo('')
+      }).catch(err=>{
+        console.log('TodoRes rrrrr!', JSON.stringify(err, null, 2));  
+      });
+      console.log('TodoRes retrieved successfully!', Platform.OS, JSON.stringify(todoRes, null, 2));
     } catch (error) {
       console.log('Error retrieving todoRes', error);
-    }
+    }    
   }
   const getData = async () => {
     try {
@@ -103,7 +109,8 @@ function App(): JSX.Element {
       <View style={{gap:20,padding:20}}>
       <Pressable onPress={loginUser}><Text>Login cognito</Text></Pressable>
       <Pressable onPress={logout}><Text>Logout cognito</Text></Pressable>
-      {/* <TextInput value='' onChange={()} */}
+
+      <TextInput value={todo} placeholder='Enter Todo' onChangeText={(val)=>settodo(val)}/>
       <Pressable onPress={saveToDB}><Text>SAVE</Text></Pressable>
       <Pressable onPress={getData}><Text>GET</Text></Pressable>
       </View>
