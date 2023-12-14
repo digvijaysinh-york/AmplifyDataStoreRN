@@ -4,6 +4,7 @@
 import 'core-js/full/symbol/async-iterator';
 import {AppRegistry} from 'react-native';
 import App from './App';
+import App2 from './App2';
 import {name as appName} from './app.json';
 import { DataStore } from 'aws-amplify/datastore';
 import { SQLiteAdapter } from '@aws-amplify/datastore-storage-adapter';
@@ -17,3 +18,4 @@ DataStore.configure({
   fullSyncInterval: 1
 });
 AppRegistry.registerComponent(appName, () => App);
+// AppRegistry.registerComponent(appName, () => App2);
