@@ -10,8 +10,7 @@ import {
   FlatList,
   ListRenderItem,
   ListRenderItemInfo,
-  Platform,
-  Pressable,
+  Platform,  
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -19,10 +18,11 @@ import {
   TextInput,
   View,
   useColorScheme,
+  TouchableOpacity
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
+import { Hub } from 'aws-amplify/utils';
 import {AuthError, getCurrentUser, signIn, signOut} from '@aws-amplify/auth';
 import {Amplify} from 'aws-amplify';
 import {DataStore, OpType, Predicates} from 'aws-amplify/datastore';
@@ -32,18 +32,37 @@ function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const [username, setusername] = useState('digvijaysinh@york.ie');
   const [password, setPassword] = useState('idencia01');
-  const [todo, settodo] = useState('');
+  const [todo, settodo] = useState('test');
   const [todoList, settodoList] = useState<Todo[]>();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  // Create listener
+  
+
   const subscription = DataStore.observe(Todo).subscribe(msg => {
-    if (msg.opType === OpType.INSERT)
-      console.log('Ele : ' + Platform.OS, JSON.stringify(msg.condition?.type));
+    console.log('Ele : ' + Platform.OS, JSON.stringify(msg.condition?.type));      
   });  
   
   useEffect(() => {
-    
+    // Create listener for datastore sync events
+    const listener = Hub.listen('datastore', async hubData => {
+        const { event, data } = hubData.payload;
+        console.log('Hub listener Datastore event: ' + event)
+    })
+
+    // Remove listener
+    return () => { listener() }
+}, [])
+
+  useEffect(() => {
+    DataStore.start().then(todo => {
+      console.log('DFatastore has been start', todo);
+    }) .catch((err: any) => {
+      console.log('Errrr', err);
+    });
+    console.log(`User has a network connection -----`);
     DataStore.query(Todo, Predicates.ALL)
       .then(todo => {
         console.log('TODOOO', todo);
@@ -52,9 +71,10 @@ function App(): JSX.Element {
         console.log('Errrr', err);
       });
     return () => {
+      console.log('unsubscribed');
       subscription.unsubscribe();
     };
-  }, []);
+   }, []);
 
   const loginUser = () => {
     signIn({username, password, options: {clientMetadata: {}}})
@@ -89,7 +109,7 @@ function App(): JSX.Element {
     try {
       const todoRes = await DataStore.save(
         new Todo({
-          name: todo + Platform.OS,
+          todoName: todo
         }),
       )
         .then(() => {
@@ -105,23 +125,19 @@ function App(): JSX.Element {
   };
   const getData = async () => {
     try {
-      console.log("FETCHING")
-      const todoRes = await DataStore.query(Todo).then((todoRes)=>{
-        
-        settodoList(todoRes);
-      }).catch((reason)=>{
-        console.log('Error retrieving posts', reason);
-      });
-      console.log(
-        'Todo retrieved successfully!',
-        JSON.stringify(todoRes, null, 2),
-      );
+
+      console.log("FETCHING", Todo);
+      const todoRes = await DataStore.query(Todo);
+      console.log('Todo retrieved successfullyyyy!', JSON.stringify(todoRes, null, 2));
+      settodoList(todoRes);
+      console.log('Todo retrieved successfully!', JSON.stringify(todoRes, null, 2));
     } catch (error) {
-      console.log('Error retrieving posts2', error);
+      console.log('Error retrieving posts', error);
     }
+    
   };
   const renderItem = (item: ListRenderItemInfo<Todo>) => {
-    return <Text>{item.item.name}</Text>;
+    return <Text>{item.item.todoName}</Text>;
   };
   const sync = async () => {
     await DataStore.start().then(() => {
@@ -153,17 +169,17 @@ function App(): JSX.Element {
         />
         <View
           style={{flexDirection: 'row', paddingHorizontal: 10, marginTop: 10}}>
-          <Pressable style={[styles.button,{backgroundColor:'orange'}]} onPress={currentAuthenticatedUser}>
+          <TouchableOpacity style={[styles.button,{backgroundColor:'orange'}]} onPress={currentAuthenticatedUser}>
             <Text style={{color:'black'}}>Status cognito</Text>
-          </Pressable>
-          <Pressable style={styles.button} onPress={loginUser}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={loginUser}>
             <Text>Sigin cognito</Text>
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[styles.button, {backgroundColor: 'red'}]}
             onPress={logout}>
             <Text>Logout cognito</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <TextInput
@@ -174,32 +190,32 @@ function App(): JSX.Element {
         />
         <View
           style={{flexDirection: 'row', paddingHorizontal: 20, marginTop: 10}}>
-          <Pressable style={styles.button} onPress={saveToDB}>
+          <TouchableOpacity style={styles.button} onPress={saveToDB}>
             <Text>SAVE</Text>
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[styles.button, {backgroundColor: 'green'}]}
             onPress={getData}>
             <Text>Refresh</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <View style={{flexDirection:'row'}}>
-        <Pressable
+        <TouchableOpacity
           style={[
             styles.button,
             {backgroundColor: 'green', marginTop: 20},
           ]}
           onPress={sync}>
           <Text>Start Sync</Text>
-        </Pressable>
-        <Pressable
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[
             styles.button,
             {backgroundColor: 'red', marginTop: 20},
           ]}
           onPress={clearLocal}>
           <Text>Clear local</Text>
-        </Pressable>
+        </TouchableOpacity>
         </View>
         <FlatList
           data={todoList}

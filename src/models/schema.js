@@ -10,8 +10,8 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "name": {
-                    "name": "name",
+                "todoName": {
+                    "name": "todoName",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -79,18 +79,8 @@ export const schema = {
             ]
         }
     },
-    "enums": {
-        "UserRole": {
-            "name": "UserRole",
-            "values": [
-                "WORKER",
-                "MANAGER",
-                "ADMIN",
-                "SUPERADMIN"
-            ]
-        }
-    },
+    "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "7928bb6eca6370e8422298c895e3e2c4"
+    "version": "1aa6e02302d5d75730f0cffa19d2fc9e"
 };

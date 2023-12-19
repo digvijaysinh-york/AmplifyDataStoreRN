@@ -2,12 +2,7 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
-export enum UserRole {
-  WORKER = "WORKER",
-  MANAGER = "MANAGER",
-  ADMIN = "ADMIN",
-  SUPERADMIN = "SUPERADMIN"
-}
+
 
 
 
@@ -17,7 +12,7 @@ type EagerTodo = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly name: string;
+  readonly todoName: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -28,7 +23,7 @@ type LazyTodo = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly name: string;
+  readonly todoName: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

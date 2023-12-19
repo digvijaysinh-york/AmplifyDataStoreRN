@@ -3,33 +3,19 @@
 # input AMPLIFY {
 #   globalAuthRule: AuthRule = { allow: public }
 # } # FOR TESTING ONLY!
-enum USER_ROLE {
-  WORKER
-  MANAGER
-  ADMIN
-  SUPERADMIN
-}
-
 type Todo
   @model
   @auth(
-    rules : [
+    rules: [
       {
         allow: private
         provider: iam
         operations: [create, read, update, delete]
       }
-      { 
-        allow: private
-        operations: [create, read, update, delete]
-      }
-      { 
-          allow: public
-          operations: [create, read, update, delete]
-       }
+      {allow: private, operations: [create, read, update, delete]}
+      {allow: public, operations: [create, read, update, delete]}
     ]
-  )
-  {
+  ) {
   id: ID!
-  name: String!
-}
+  todoName: String!
+  }

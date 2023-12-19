@@ -14,7 +14,7 @@ export const createTodo = /* GraphQL */ `mutation CreateTodo(
 ) {
   createTodo(input: $input, condition: $condition) {
     id
-    name
+    todoName
     createdAt
     updatedAt
     _version
@@ -33,7 +33,7 @@ export const updateTodo = /* GraphQL */ `mutation UpdateTodo(
 ) {
   updateTodo(input: $input, condition: $condition) {
     id
-    name
+    todoName
     createdAt
     updatedAt
     _version
@@ -52,7 +52,7 @@ export const deleteTodo = /* GraphQL */ `mutation DeleteTodo(
 ) {
   deleteTodo(input: $input, condition: $condition) {
     id
-    name
+    todoName
     createdAt
     updatedAt
     _version
