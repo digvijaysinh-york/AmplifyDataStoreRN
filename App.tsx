@@ -11,8 +11,14 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-
-import {AuthError, getCurrentUser, signIn, signOut} from '@aws-amplify/auth';
+import RNFS from 'react-native-fs';
+import {
+  AuthError,
+  getCurrentUser,
+  signIn,
+  signOut,
+  fetchAuthSession,
+} from 'aws-amplify/auth';
 import {DataStore, OpType} from 'aws-amplify/datastore';
 import {Hub} from 'aws-amplify/utils';
 import {Todo} from './src/models';
@@ -25,19 +31,20 @@ function App(): JSX.Element {
   const [todoList, settodoList] = useState<Todo[]>([]);
 
   useEffect(() => {
-    // Create listener for datastore sync events
     const listener = Hub.listen('datastore', async hubData => {
       const {event, data} = hubData.payload;
       console.log('Hub listener Datastore event: ' + event);
+      if (event === 'ready') {        
+        DataStore.start()
+          .then(todo => {
+            console.log('Datastore has been start', todo);
+            getData();
+          })
+          .catch((err: any) => {
+            console.log('Error datastore to start', err);
+          });
+      }
     });
-
-    // Remove listener
-    return () => {
-      listener();
-    };
-  }, []);
-
-  useEffect(() => {
     const subscription = DataStore.observe(Todo).subscribe(value => {
       switch (value.opType) {
         case OpType.INSERT:
@@ -59,15 +66,9 @@ function App(): JSX.Element {
           break;
       }
     });
-    DataStore.start()
-      .then(todo => {
-        console.log('Datastore has been start', todo);
-        getData()
-      })
-      .catch((err: any) => {
-        console.log('Error datastore to start', err);
-      });
+
     return () => {
+      listener();
       subscription.unsubscribe();
     };
   }, []);
@@ -101,7 +102,8 @@ function App(): JSX.Element {
       console.log(err);
     }
   }
-  const saveToDB = async () => {
+  const saveToDB = async () => {    
+    console.log("SAVINGGG")
     try {
       const todoRes = await DataStore.save(
         new Todo({
@@ -163,7 +165,7 @@ function App(): JSX.Element {
 
   const renderItem = (item: ListRenderItemInfo<Todo>) => {
     return (
-      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:20}}>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
         <TextInput
           onChangeText={val => {
             let todoListCopy = [...todoList];
@@ -176,12 +178,17 @@ function App(): JSX.Element {
             updateItem(todoList[item.index]);
           }}
           value={item.item.todoName}
-          style={{flex: 1,padding:10,borderBottomWidth:1,borderBottomColor:'grey'}}></TextInput>
+          style={{
+            flex: 1,
+            padding: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: 'grey',
+          }}></TextInput>
         <Text
           onPress={() => {
             deleteItem(item.item);
           }}
-          style={{color: 'red',margin:10}}>
+          style={{color: 'red', margin: 10}}>
           Delete
         </Text>
       </View>
@@ -195,6 +202,21 @@ function App(): JSX.Element {
   };
   const clearLocal = async () => {
     await DataStore.clear();
+  };
+  const backup = async () => {
+    const reader = await RNFS.readDir(
+      RNFS.LibraryDirectoryPath + '/LocalDatabase/',
+    );
+    console.log('JSONNN', JSON.stringify(reader));
+    /*copy file from app bundle to library/localDatabase*/
+    var destination = RNFS.DocumentDirectoryPath + '/' + 'AmplifyDatastore123';
+    var source =
+      RNFS.LibraryDirectoryPath + '/LocalDatabase/' + 'AmplifyDatastore';
+
+    RNFS.copyFile(source, destination).then(() => {
+      // var db = SQLite.openDatabase("myDatabase.sqlite", "1.0", "", 200000, me._openCB, me._errorCB);
+      console.log('COPY DONE');
+    });
   };
 
   return (
@@ -238,7 +260,9 @@ function App(): JSX.Element {
         />
         <View
           style={{flexDirection: 'row', paddingHorizontal: 20, marginTop: 10}}>
-          <TouchableOpacity style={styles.button} onPress={saveToDB}>
+          <TouchableOpacity
+            style={[styles.button, {backgroundColor: 'tomato'}]}
+            onPress={saveToDB}>
             <Text>SAVE</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -249,14 +273,35 @@ function App(): JSX.Element {
         </View>
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
-            style={[styles.button, {backgroundColor: 'green', marginTop: 20}]}
+            style={[
+              styles.button,
+              {backgroundColor: 'darkturquoise', marginTop: 20},
+            ]}
             onPress={sync}>
             <Text>Force Sync</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.button, {backgroundColor: 'red', marginTop: 20}]}
+            style={[
+              styles.button,
+              {backgroundColor: 'darkseagreen', marginTop: 20},
+            ]}
             onPress={clearLocal}>
             <Text>Clear local</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={[styles.button, {backgroundColor: 'pink', marginTop: 20}]}
+            onPress={backup}>
+            <Text>Backup DB</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              {backgroundColor: 'darkkhaki', marginTop: 20},
+            ]}
+            onPress={() => {}}>
+            <Text>Restore DB</Text>
           </TouchableOpacity>
         </View>
         <FlatList
